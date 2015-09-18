@@ -1,23 +1,27 @@
 \documentclass[12pt]{article}
 
 \usepackage{sbc-template}
-
+%\usepackage{pr ogram}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+%\usepackage{Algorithm2e}
 \usepackage{graphicx,url}
 
-%\usepackage[brazil]{babel}   
+\usepackage[brazil]{babel}   
 \usepackage[latin1]{inputenc}  
 
+%\renewcommand{\algorithmiccomment}[1]{\bgroup\hfill//~#1\egroup}
      
 \sloppy
 
-\title{Instructions for Authors of SBC Conferences\\ Papers and Abstracts}
+\title{Problema do Máximo Subarray\\ Uma Análise de sua Complexidade}
 
 \author{Matheus Garay Trindadel\inst{1}, Guilherme de Freitas Gaiardo\inst{1} }
 
 
-\address{Departamento de Eletrônica e Computação -- Universidade Federal de Santa Maria
+\address{Departamento de Eletrônica e Computação -- Universidade Federal de Santa Maria\\
   (UFSM)\\
-  Caixa Postal 15.064 -- 91.501-970 -- Porto Alegre -- RS -- Brazil\\
+  97.105-900 -- Santa Maria -- RS -- Brazil\\
   \email{\{mtrindade,ggaiardo\}@inf.ufsm.br}
 }
 
@@ -44,53 +48,71 @@
 \end{resumo}
 
 
-\section{General Information}
+\section{Introdução}
 
-All full papers and posters (short papers) submitted to some SBC conference,
-including any supporting documents, should be written in English or in
-Portuguese. The format paper should be A4 with single column, 3.5 cm for upper
-margin, 2.5 cm for bottom margin and 3.0 cm for lateral margins, without
-headers or footers. The main font must be Times, 12 point nominal size, with 6
-points of space before each paragraph. Page numbers must be suppressed.
+Em computação é recorrente encontrar problemas que, devido a limitações dos computares, não se é possível resolver em tempo hábil para certas entradas. Muitas vezes, algoritmos completamente funcionais para entradas pequenas se tornam inutilizáveis para entradas grandes. No intuito de prever o desempenho de algoritmos, podemos usar técnicas para estimar o crescimento da quantidade de instruções necessárias para resolver um dado problema em função do tamanho da entrada. Vale ressaltar que essas técnicas são independentes de arquitetura e simplesmente mostram como o custo computacional se comporta.
 
-Full papers must respect the page limits defined by the conference.
-Conferences that publish just abstracts ask for \textbf{one}-page texts.
+Para exemplificar esse conceito, esse artigo faz uma análise computacional do problema clássico do máximo subarray. Nessa análise, serão apresentadas apresentados três algoritmos que resolvem esse problema. Cada um desses algoritmos possui uma complexidade, i.e., um crescimento do custo computacional, diferente. Essas complexidades serão demonstradas usando diversas técnicas, dependendo da estrutura do algoritmo.
 
-\section{First Page} \label{sec:firstpage}
+\section{Problema do Subarray Máximo} \label{sec:firstpage}
 
-The first page must display the paper title, the name and address of the
-authors, the abstract in English and ``resumo'' in Portuguese (``resumos'' are
-required only for papers written in Portuguese). The title must be centered
-over the whole page, in 16 point boldface font and with 12 points of space
-before itself. Author names must be centered in 12 point font, bold, all of
-them disposed in the same line, separated by commas and with 12 points of
-space after the title. Addresses must be centered in 12 point font, also with
-12 points of space after the authors' names. E-mail addresses should be
-written using font Courier New, 10 point nominal size, with 6 points of space
-before and 6 points of space after.
+O clássico problema do subarray máximo consiste do seguinte: dado um array de valores contendo valores negativos, encontrar o subarray que, dentro do conjunto de subarrays do array original, se somarmos os valores de seus elementos, possui a maior soma. Por exemplo, podemos tomar o array A apresentado na sequência:
 
-The abstract and ``resumo'' (if is the case) must be in 12 point Times font,
-indented 0.8cm on both sides. The word \textbf{Abstract} and \textbf{Resumo},
-should be written in boldface and must precede the text.
+\begin{center}
+$A = [13, -3, -25, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]$
+\end{center}
 
-\section{CD-ROMs and Printed Proceedings}
+Observando o array, percbemos que o subarray com a soma máxima consite em:
 
-In some conferences, the papers are published on CD-ROM while only the
-abstract is published in the printed Proceedings. In this case, authors are
-invited to prepare two final versions of the paper. One, complete, to be
-published on the CD and the other, containing only the first page, with
-abstract and ``resumo'' (for papers in Portuguese).
+\begin{center}
+$ [18, 20, -7, 12]$
+\end{center}
 
-\section{Sections and Paragraphs}
+A soma desse subarray corresponde a 43. Nenhum outro subarray possui uma soma superior a esta. O problema então consiste em escrever um algoritmo para analisar o conjunto de subarrays e achar o que maximiza a soma de seus elementos.
 
-Section titles must be in boldface, 13pt, flush left. There should be an extra
-12 pt of space before each title. Section numbering is optional. The first
-paragraph of each section should not be indented, while the first lines of
-subsequent paragraphs should be indented by 1.27 cm.
 
-\subsection{Subsections}
 
-The subsection titles must be in boldface, 12pt, flush left.
+
+
+
+%Discutir sobre O, THETA e Omega?
+
+\section{Soluções para o Problem}
+
+A seguir, serão discutidas diversas formas de resolver o problema. Além disso, uma extensiva análise da solução será feita para demonstrar a complexidade em cada caso.
+\subsection{Força Bruta}
+
+A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todos os subarrays e compará-los entre si. O algoritmo consiste em dois laços aninhados para montar todos os subarrays. A soma é computada e salva. Se a soma for maior que a maior soma corrente (ou não existir soma corrente), ela passa ser a maior soma e o subarray máximo passa a ser o subarray que gerou esta soma. A solução é melhor apresentada no seguinte pseudocódigo:
+\\
+
+%\sum\limits_{i=1}^n i^2 = \frac{n(n+1)(2n+1)}{6}
+%\begin{center}
+\begin{algorithm}[H]
+  \caption{Força Bruta}\label{bruteforce}
+  \begin{algorithmic}[1]
+    \Function{maxSubarray}{$A$}%\Comment{The g.c.d. of a and b}
+     \State \texttt{$maxSoma \gets -\infty$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+     \State \texttt{$n \gets len(A)$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+     \State \texttt{$i0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+     \State \texttt{$j0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+      \For{$i \in [1:n]$} \Comment{\parbox[t]{.2\linewidth}{$n+1$}}
+     	\State \texttt{$soma \gets 0$} \Comment{\parbox[t]{.2\linewidth}{$n$}}
+		\For{$j \in [i:n]$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n+1} i = \frac{n^2 +3n + 2}{2}$}}
+			\State \texttt{$soma \gets soma + A[j]$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
+			\If{$soma > maxSoma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
+ 				\State \texttt{$maxSoma \gets soma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
+ 				\State \texttt{$i0 \gets i$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
+ 				\State \texttt{$j0 \gets j$}		\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}		
+			\EndIf
+
+      	\EndFor          
+      \EndFor
+      \State \textbf{return} $A[i0:j0]$ \Comment{\parbox[t]{.2\linewidth}{$1$}}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
 
 \section{Figures and Captions}\label{sec:figs}
 
