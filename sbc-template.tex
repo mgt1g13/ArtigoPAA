@@ -74,10 +74,9 @@ A soma desse subarray corresponde a 43. Nenhum outro subarray possui uma soma su
 
 
 
-
 %Discutir sobre O, THETA e Omega?
 
-\section{Soluções para o Problem}
+\section{Soluções para o Problema}
 
 A seguir, serão discutidas diversas formas de resolver o problema. Além disso, uma extensiva análise da solução será feita para demonstrar a complexidade em cada caso.
 \subsection{Força Bruta}
@@ -90,22 +89,22 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 \begin{algorithm}[H]
   \caption{Força Bruta}\label{bruteforce}
   \begin{algorithmic}[1]
-    \Function{SubarrayMaximoForçaBruta}{$A$}%\Comment{The g.c.d. of a and b}
+    \Function{maxSubarray}{$A$}%\Comment{The g.c.d. of a and b}
      \State \texttt{$maxSoma \gets -\infty$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
-     \State \texttt{$n \gets tamanho(A)$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+     \State \texttt{$n \gets len(A)$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
      \State \texttt{$i0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
      \State \texttt{$j0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
       \For{$i \in [1:n]$} \Comment{\parbox[t]{.2\linewidth}{$n+1$}}
-     	\State \texttt{$soma \gets 0$} \Comment{\parbox[t]{.2\linewidth}{$n$}}
-		\For{$j \in [i:n]$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n+1} i = \frac{n^2 +3n + 2}{2}$}}
-			\State \texttt{$soma \gets soma + A[j]$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
-			\If{$soma > maxSoma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
- 				\State \texttt{$maxSoma \gets soma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
- 				\State \texttt{$i0 \gets i$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
- 				\State \texttt{$j0 \gets j$}		\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}		
-			\EndIf
+      \State \texttt{$soma \gets 0$} \Comment{\parbox[t]{.2\linewidth}{$n$}}
+    \For{$j \in [i:n]$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n+1} i = \frac{n^2 +3n + 2}{2}$}}
+      \State \texttt{$soma \gets soma + A[j]$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
+      \If{$soma > maxSoma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} i = \frac{n^2 +n}{2}$}}
+        \State \texttt{$maxSoma \gets soma$} \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
+        \State \texttt{$i0 \gets i$}\Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}
+        \State \texttt{$j0 \gets j$}    \Comment{\parbox[t]{.2\linewidth}{$\sum\limits_{i=1}^{n} t_j$}}   
+      \EndIf
 
-      	\EndFor          
+        \EndFor          
       \EndFor
       \State \textbf{return} $A[i0:j0]$ \Comment{\parbox[t]{.2\linewidth}{$1$}}
     \EndFunction
@@ -113,23 +112,29 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 \end{algorithm}
 
 
+\subsection{Divisão e Conquista}
+
+Uma solução mais eficiente e elaborada é utilizar a tecnica de divisão e conquista. A solução é definida recursivamente, dividindo o array original em arrays menores, até chegar ao caso básico onde existe somente um elemento. A ideia geral do algoritmo é dividir em três possibilidades. Ou o subarray máximo está à esquerda do meio do array, ou está à direita ou então está passando pelo meio do array. O algoritmo irá realizar a chamada recursiva para os dois primeiros casos, e para o caso de estar no meio, é utilizado uma chamada especial onde é calculado o subarray máximo de forma linear. Ao fim das chamadas recursivas, é verificado qual foi o retorno com a maior soma (maior subarray).
+A seguir, apresentamos o algoritmo em pseudocódigo.
+
 \begin{algorithm}[H]
   \caption{Divisão e Conquista}\label{divideAndConquer}
   \begin{algorithmic}[1]
   
-	\Function{FindMaxCrossingSubarray}{$A, low, mid, high$}  
-\State \texttt{$	left\_sum = -\infty$}
-\State \texttt{$	soma = 0$}
-\State \texttt{$	max\_left = mid$}
-	\For{$ i = mid~;~i > low-1~;~ i = i -1 $}
-		\State \texttt{$		soma =  soma + a[i]$}
-		\If{$soma >left_sum$}
-		\State \texttt{$			left\_sum = soma$}
-		\State \texttt{$			max\_left = i$}
-		\EndIf
-	\EndFor
+  \Function{FindMaxCrossingSubarray}{$A, low, mid, high$}  
+\State \texttt{$  left\_sum = -\infty$}
+\State \texttt{$  soma = 0$}
+\State \texttt{$  max\_left = mid$}
+  \For{$ i = mid~;~i > low-1~;~ i = i -1 $}
+    \State \texttt{$    soma =  soma + a[i]$}
+    \If{$soma >left_sum$}
+    \State \texttt{$      left\_sum = soma$}
+    \State \texttt{$      max\_left = i$}
+    \EndIf
+  \EndFor
 \State
 
+<<<<<<< HEAD
 \State \texttt{$	right\_sum =-\infty$}
 \State \texttt{$	soma = 0$}
 \State \texttt{$	max\_right = mid$}
@@ -139,38 +144,59 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 			\State \texttt{$			right\_sum = soma$}
 			\State \texttt{$			max\_right = i$}
 		\EndIf
+
 \EndFor
-\State \texttt{$	return (max\_left, max\_right, right\_sum + left\_sum)$}
+\State \texttt{$  return (max\_left, max\_right, right\_sum + left\_sum)$}
   
   \EndFunction \State \State
   
   
     \Function{SubarrayMaximoDivEConq}{$A, low, high$}%\Comment{The g.c.d. of a and b}
     
-   	\If{$low = high$}
-		\State \textbf{return} $(low, high, A[low])$
-   	\EndIf
-	\State   	
+    \If{$low = high$}
+    \State \textbf{return} $(low, high, A[low])$
+    \EndIf
+  \State    
     \State \texttt{$mid \gets \lfloor \frac{low + high}{2} \rfloor$}
-	\State
-\State \texttt{$	(l\_low, l\_high, l\_sum) = SubarrayMaximoDivEConq(a, low, mid)$}
-\State \texttt{$	(r\_low, r\_high, r\_sum) = SubarrayMaximoDivEConq(a, mid+1, high)$}
-\State \texttt{$	(c\_low, c\_high, c\_sum) = findMaxCrossingSubarray(a, low, mid, high)$}
-	\State
-	\If{$l\_sum >= r\_sum and l\_sum >= c\_sum$}
-				\State \textbf{return} $(l\_low, l\_high, l\_sum)$
-	
-	\ElsIf {$r\_sum >= l\_sum and r\_sum >= c\_sum$}
-				\State \textbf{return} $(r\_low, r\_high, r\_sum])$
-	\Else
-				\State \textbf{return} $(c\_low, c\_high, c\_sum])$
-	\EndIf
+  \State
+\State \texttt{$  (l\_low, l\_high, l\_sum) = SubarrayMaximoDivEConq(a, low, mid)$}
+\State \texttt{$  (r\_low, r\_high, r\_sum) = SubarrayMaximoDivEConq(a, mid+1, high)$}
+\State \texttt{$  (c\_low, c\_high, c\_sum) = findMaxCrossingSubarray(a, low, mid, high)$}
+  \State
+  \If{$l\_sum >= r\_sum and l\_sum >= c\_sum$}
+        \State \textbf{return} $(l\_low, l\_high, l\_sum)$
+  
+  \ElsIf {$r\_sum >= l\_sum and r\_sum >= c\_sum$}
+        \State \textbf{return} $(r\_low, r\_high, r\_sum])$
+  \Else
+        \State \textbf{return} $(c\_low, c\_high, c\_sum])$
+  \EndIf
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
 
+\subsection{Teorema Mestre}
 
-
+O teorema mestre é uma solução assintótica, utilizando a notação O Grande, para análise do comportamento de algoritmos que empregam tecnicas de divisão e conquista. Ele não resolve qualquer recorrencia, no entando.
+O teorema mestre resolve recorrencias da forma:
+\begin{center}
+$T(n) = aT(n/b) + f(n)$
+\end{center}
+onde $a>=1$ e $b>1$. Sendo $n$ o tamanho da entrada, $a$ o número de divisões por recursão, $n/b$ é o tamanho do subproblema da proxima recursão e $f(n)$ é o custo envolvido em computações fora das chamadas recursivas e o custo de junção das soluções.
+Existem três casos onde é possível determinar o crescimento do custo:
+Se $f(n) \in O(n^c)$ onde $c< log_b a$, então a solução é $T(n) \in \theta(n^{log_b a})$.
+O segundo caso é válido se, dado uma constante $k >= 0$ que satisfaça a seguinte relação: $f(n) = \theta(n^c log_k n$ onde $c = log_b a$
+então a solução é $T(n) = \theta(n^c log_{k+1} n$.
+O terceiro e último caso é válido se $f(n) = \omega(n^c)$ onde $c > log_b a$ e $af(n/b) <= kf(n)$ para uma constante $k<1$ e um $n$ suficientemente grande. Então a solução é $T(n) = \theta(f(n))$
+Resolvendo com a estratégia de divisão e conquista o problema do sub array máximo, podemos verificar que:
+\begin{center}
+$T(n) = 2T(n/2) + n$
+\end{center}
+onde $a=2$ (as duas chamadas por nível de recursão), $b=2$ (o problema é dividido ao meio), e $f(n) = n$ (tempo linear da chamada da função que verifica o meio do array).
+Sendo $c=log_b a=log_2 2=1$ e $f(n) = \theta(n^c log_k n)$ onde $k=0$, as condições estão satisfeitas, aplicando o teorema temos:
+\begin{center}
+$T(n) = \theta(nlog n)$
+\end{center}
 
 
 \section{Figures and Captions}\label{sec:figs}
