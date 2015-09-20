@@ -178,21 +178,27 @@ A seguir, apresentamos o algoritmo em pseudocódigo.
 \subsection{Teorema Mestre}
 
 O teorema mestre é uma solução assintótica, utilizando a notação O Grande, para análise do comportamento de algoritmos que empregam tecnicas de divisão e conquista. Ele não resolve qualquer recorrencia, no entanto.
+
 O teorema mestre resolve recorrencias da forma:
 \begin{center}
 $T(n) = aT(n/b) + f(n)$
 \end{center}
 onde $a>=1$ e $b>1$. Sendo $n$ o tamanho da entrada, $a$ o número de divisões por recursão, $n/b$ é o tamanho do subproblema da proxima recursão e $f(n)$ é o custo envolvido em computações fora das chamadas recursivas e o custo de junção das soluções.
 Existem três casos onde é possível determinar o crescimento do custo:
+
 Se $f(n) \in O(n^c)$ onde $c< log_b a$, então a solução é $T(n) \in \theta(n^{log_b a})$.
+
 O segundo caso é válido se, dado uma constante $k >= 0$ que satisfaça a seguinte relação: $f(n) = \theta(n^c log^k n$ onde $c = log_b a$
 então a solução é $T(n) = \theta(n^c log^{k+1} n$.
+
 O terceiro e último caso é válido se $f(n) = \omega(n^c)$ onde $c > log_b a$ e $af(n/b) <= kf(n)$ para uma constante $k<1$ e um $n$ suficientemente grande. Então a solução é $T(n) = \theta(f(n))$
+
 Resolvendo com a estratégia de divisão e conquista o problema do sub array máximo, podemos verificar que:
 \begin{center}
 $T(n) = 2T(n/2) + n$
 \end{center}
 onde $a=2$ (as duas chamadas por nível de recursão), $b=2$ (o problema é dividido ao meio), e $f(n) = n$ (tempo linear da chamada da função que verifica o meio do array).
+
 Sendo $c=log_b a=log_2 2=1$ e $f(n) = \theta(n^c log^k n)$ onde $k=0$, as condições estão satisfeitas, aplicando o teorema temos:
 \begin{center}
 $T(n) = \theta(nlog n)$
