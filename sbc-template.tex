@@ -188,8 +188,8 @@ Existem três casos onde é possível determinar o crescimento do custo:
 
 Se $f(n) \in O(n^c)$ onde $c< log_b a$, então a solução é $T(n) \in \theta(n^{log_b a})$.
 
-O segundo caso é válido se, dado uma constante $k >= 0$ que satisfaça a seguinte relação: $f(n) = \theta(n^c log^k n$ onde $c = log_b a$
-então a solução é $T(n) = \theta(n^c log^{k+1} n$.
+O segundo caso é válido se, dado uma constante $k >= 0$ que satisfaça a seguinte relação: $f(n) = \theta(n^c log^k n)$ onde $c = log_b a$
+então a solução é $T(n) = \theta(n^c log^{k+1} n)$.
 
 O terceiro e último caso é válido se $f(n) = \omega(n^c)$ onde $c > log_b a$ e $af(n/b) <= kf(n)$ para uma constante $k<1$ e um $n$ suficientemente grande. Então a solução é $T(n) = \theta(f(n))$
 
