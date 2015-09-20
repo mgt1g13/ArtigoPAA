@@ -134,10 +134,10 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 \State \texttt{$	soma = 0$}
 \State \texttt{$	max\_right = mid$}
 	\For{$ i = mid+1 ; i< high+1 ; i = i + 1):$}
-		\State \texttt{$		soma += a[i]$}
+		\State \texttt{$		soma = som + a[i]$}
 		\If{$soma >right_sum$}
-			\State \texttt{$			right_sum = soma$}
-			\State \texttt{$			max_right = i$}
+			\State \texttt{$			right\_sum = soma$}
+			\State \texttt{$			max\_right = i$}
 		\EndIf
 \EndFor
 \State \texttt{$	return (max\_left, max\_right, right\_sum + left\_sum)$}
