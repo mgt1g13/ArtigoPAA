@@ -90,9 +90,9 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 \begin{algorithm}[H]
   \caption{Força Bruta}\label{bruteforce}
   \begin{algorithmic}[1]
-    \Function{maxSubarray}{$A$}%\Comment{The g.c.d. of a and b}
+    \Function{SubarrayMaximoForçaBruta}{$A$}%\Comment{The g.c.d. of a and b}
      \State \texttt{$maxSoma \gets -\infty$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
-     \State \texttt{$n \gets len(A)$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
+     \State \texttt{$n \gets tamanho(A)$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
      \State \texttt{$i0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
      \State \texttt{$j0 \gets -1$} \Comment{\parbox[t]{.2\linewidth}{$1$}}
       \For{$i \in [1:n]$} \Comment{\parbox[t]{.2\linewidth}{$n+1$}}
@@ -111,6 +111,65 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
+
+
+\begin{algorithm}[H]
+  \caption{Divisão e Conquista}\label{divideAndConquer}
+  \begin{algorithmic}[1]
+  
+	\Function{FindMaxCrossingSubarray}{$A, low, mid, high$}  
+\State \texttt{$	left\_sum = -\infty$}
+\State \texttt{$	soma = 0$}
+\State \texttt{$	max\_left = mid$}
+	\For{$ i = mid~;~i > low-1~;~ i = i -1 $}
+		\State \texttt{$		soma =  soma + a[i]$}
+		\If{$soma >left_sum$}
+		\State \texttt{$			left\_sum = soma$}
+		\State \texttt{$			max\_left = i$}
+		\EndIf
+	\EndFor
+\State
+
+\State \texttt{$	right\_sum =-\infty$}
+\State \texttt{$	soma = 0$}
+\State \texttt{$	max\_right = mid$}
+	\For{$ i = mid+1 ; i< high+1 ; i = i + 1):$}
+		\State \texttt{$		soma += a[i]$}
+		\If{$soma >right_sum$}
+			\State \texttt{$			right_sum = soma$}
+			\State \texttt{$			max_right = i$}
+		\EndIf
+\EndFor
+\State \texttt{$	return (max\_left, max\_right, right\_sum + left\_sum)$}
+  
+  \EndFunction \State \State
+  
+  
+    \Function{SubarrayMaximoDivEConq}{$A, low, high$}%\Comment{The g.c.d. of a and b}
+    
+   	\If{$low = high$}
+		\State \textbf{return} $(low, high, A[low])$
+   	\EndIf
+	\State   	
+    \State \texttt{$mid \gets \lfloor \frac{low + high}{2} \rfloor$}
+	\State
+\State \texttt{$	(l\_low, l\_high, l\_sum) = SubarrayMaximoDivEConq(a, low, mid)$}
+\State \texttt{$	(r\_low, r\_high, r\_sum) = SubarrayMaximoDivEConq(a, mid+1, high)$}
+\State \texttt{$	(c\_low, c\_high, c\_sum) = findMaxCrossingSubarray(a, low, mid, high)$}
+	\State
+	\If{$l\_sum >= r\_sum and l\_sum >= c\_sum$}
+				\State \textbf{return} $(l\_low, l\_high, l\_sum)$
+	
+	\ElsIf {$r\_sum >= l\_sum and r\_sum >= c\_sum$}
+				\State \textbf{return} $(r\_low, r\_high, r\_sum])$
+	\Else
+				\State \textbf{return} $(c\_low, c\_high, c\_sum])$
+	\EndIf
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+
 
 
 
