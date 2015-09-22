@@ -112,12 +112,85 @@ A solução talvez mais óbvia e simples consiste em, exaustivamente, calcular todo
 \end{algorithm}
 
 
+Ao lado de cada linha, temos a quantidade de vezes que a mesma é executada em função de $n$, o tamanho da entrada. Os somatórios surgem para representar a quantidade de vezes que a linha é executada levando em conta que ela está dentro de um laço. $t_j$ foi inserido pois as linhas executadas dentro da condicional depende da entrada, mas no pior caso, temos o esses somatorios igual a:
+
+\begin{center}
+	$\sum\limits_{i=1}^{n}t_j = \sum\limits_{i=1}^{n}i = \frac{n^2 + n}{2}$
+\end{center}
+
+Logo, temos que:
+
+\begin{center}
+	$ 0 \leq \sum\limits_{i=1}^{n}t_j \leq \frac{n^2 + n}{2}$
+\end{center}
+
+Assim, se somarmos o número de vezes que cada linha é executada, temos que a quantidade de instruções pode ser ser expressa pelo polinômio $f(n)$:
+
+\begin{center}
+	$f(n) = an^2 + bn + c \mid a, b, c \in \mathbf{R}$
+
+\end{center}
+
+Assim, desconsiderando os termos de baixa ordem, temos que, para essa solução:
+
+\begin{center}
+	$f(n) = \theta(n^2)$
+
+\end{center}
+
+
+
+
+ 
+
+
+
+
+
+\begin{algorithm}[H]
+  \caption{Força Bruta}\label{recursiveSubArray}
+  \begin{algorithmic}[1]
+    \Function{\_SubarrayMaximoRecursivo}{$A, i, j, max\_ending\_here$}
+		\If{$max\_ending\_here > 0$}
+			\State \texttt{$(i, j, max\_ending\_here) = (i, j, max\_ending\_here + A[j)$}
+		\Else
+			\State \texttt{$(i, j, max\_ending\_here) = (j, j,A[j)$}
+		\EndIf
+		\State \texttt{$(i1, j1 , max\_so\_far) \gets (0,0,0)$}
+		\If{$j+1 < len(A)$}
+			\State \texttt{$(i1, j1 , max\_so\_far)\gets \_SubarrayMaximoRecursivo(A, i, j+1, max\_ending\_here)$}
+		\Else
+			\State \texttt{$(i1, j1 , max\_so\_far) \gets (i, j, max\_ending\_here) $}
+		
+		\EndIf    
+    		\If{$max\_ending\_here  > max\_so\_far$}
+    			 \State \textbf{return} $(i, j, max\_ending\_here)$
+    		\Else
+    			 \State \textbf{return} $(i1, j1, max\_so\_far)$
+    		\EndIf
+     
+     
+     \EndFunction
+     \Function{SubarrayMaximoRecursivo}{$A, i, j, max\_ending\_here$}
+     		\State \textbf{return} $\_SubarrayMaximoRecursivo(A, 0, 0, -\infty)$
+     
+     \EndFunction
+         
+     
+     
+  \end{algorithmic}
+\end{algorithm}
+
+
+
+
+
 \subsection{Divisão e Conquista}
 
 Uma solução mais eficiente e elaborada é utilizar a tecnica de divisão e conquista. A solução é definida recursivamente, dividindo o array original em arrays menores, até chegar ao caso básico onde existe somente um elemento. A ideia geral do algoritmo é dividir em três possibilidades. Ou o subarray máximo está à esquerda do meio do array, ou está à direita ou então está passando pelo meio do array. O algoritmo irá realizar a chamada recursiva para os dois primeiros casos, e para o caso de estar no meio, é utilizado uma chamada especial onde é calculado o subarray máximo de forma linear. Ao fim das chamadas recursivas, é verificado qual foi o retorno com a maior soma (maior subarray).
-A seguir, apresentamos o algoritmo em pseudocódigo.
+A solução é descrita no Algoritmo~\ref{divideAndConquer}.
 
-\begin{algorithm}[H]
+\begin{algorithm}[]
   \caption{Divisão e Conquista}\label{divideAndConquer}
   \begin{algorithmic}[1]
   
@@ -166,13 +239,19 @@ A seguir, apresentamos o algoritmo em pseudocódigo.
         \State \textbf{return} $(l\_low, l\_high, l\_sum)$
   
   \ElsIf {$r\_sum >= l\_sum and r\_sum >= c\_sum$}
-        \State \textbf{return} $(r\_low, r\_high, r\_sum])$
+        \State \textbf{return} $(r\_low, r\_high, r\_sum)$
   \Else
-        \State \textbf{return} $(c\_low, c\_high, c\_sum])$
+        \State \textbf{return} $(c\_low, c\_high, c\_sum)$
   \EndIf
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
+
+
+
+
+
+
 
 \subsection{Teorema Mestre}
 
@@ -203,64 +282,41 @@ Sendo $c=log_b a=log_2 2=1$ e $f(n) = \theta(n^c log^k n)$ onde $k=0$, as condiç
 $T(n) = \theta(nlog n)$
 \end{center}
 
+\section{Solução Linear}
 
-\section{Figures and Captions}\label{sec:figs}
+Existe ainda outra forma de resolver o problema do Subarray Máximo. Essa forma é descrita pelo Algoritmo ~\ref{recursiveSubArray}. Esse algortimo é baseado no famoso algoritmo de Kadane.
+
+A ideia em seu cerne no fato de que, se temos uma soma acumulada negativa, podemos iniciar uma nova contagem no elemento corrente. Ou seja, começando no primeiro termo, vamos montando subarrays usando a ideia principal descrita anteriormente. Chamando recursivamente para o próximo elemento, calculamos o maior subarray terminando no próximo elemento. Avaliamos o retorno com o calculado e se retorna o maior.
+
+Para a análise de complexidade, podemos descrever o algoritmo como a seguinte recorrência:
+
+\begin{center}
+$T(n) = T(n-1) + \theta(1)$
+\end{center}
+
+$\theta(n)$ representa a complexidade de cada passo. Como é sempre constante, é evidente que temos $\theta{1}$. Para resolver a recorrência, podemos fazer o seguinte ``chute":
+
+\begin{center}
+$T(n) = \theta(n)$
+\end{center}
+
+Essa hipótese justifica o caso básico, já que:
+
+\begin{center}
+$T(1) = \theta(1)$
+\end{center}
+
+E para o passo indutivo temos:
+
+\begin{center}
+$T(n) = T(n) = T(n-1) + \theta(1) =  \theta(n) + \theta(1) = \theta(n)$
+\end{center}
+
+Assim, temos que a solução exata da recorrência é $\theta(n)$. Portanto, o algoritmo tem complexidade linear.
 
 
-Figure and table captions should be centered if less than one line
-(Figure~\ref{fig:exampleFig1}), otherwise justified and indented by 0.8cm on
-both margins, as shown in Figure~\ref{fig:exampleFig2}. The caption font must
-be Helvetica, 10 point, boldface, with 6 points of space before and after each
-caption.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.5\textwidth]{fig1.jpg}
-\caption{A typical figure}
-\label{fig:exampleFig1}
-\end{figure}
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.3\textwidth]{fig2.jpg}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
-\label{fig:exampleFig2}
-\end{figure}
-
-In tables, try to avoid the use of colored or shaded backgrounds, and avoid
-thick, doubled, or unnecessary framing lines. When reporting empirical data,
-do not use more decimal digits than warranted by their precision and
-reproducibility. Table caption must be placed before the table (see Table 1)
-and the font used must also be Helvetica, 10 point, boldface, with 6 points of
-space before and after each caption.
-
-\begin{table}[ht]
-\centering
-\caption{Variables to be considered on the evaluation of interaction
-  techniques}
-\label{tab:exTable1}
-\includegraphics[width=.7\textwidth]{table.jpg}
-\end{table}
-
-\section{Images}
-
-All images and illustrations should be in black-and-white, or gray tones,
-excepting for the papers that will be electronically available (on CD-ROMs,
-internet, etc.). The image resolution on paper should be about 600 dpi for
-black-and-white images, and 150-300 dpi for grayscale images.  Do not include
-images with excessive resolution, as they may take hours to print, without any
-visible difference in the result. 
-
-\section{References}
-
-Bibliographic references must be unambiguous and uniform.  We recommend giving
-the author names references in brackets, e.g. \cite{knuth:84},
-\cite{boulic:91}, and \cite{smith:99}.
-
-The references must be listed using 12 point font size, with 6 points of space
-before each reference. The first line of each reference should not be
-indented, while the subsequent should be indented by 0.5 cm.
 
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
