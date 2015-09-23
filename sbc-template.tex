@@ -286,7 +286,7 @@ $T(n) = \theta(nlog n)$
 
 Existe ainda outra forma de resolver o problema do Subarray Máximo. Essa forma é descrita pelo Algoritmo ~\ref{recursiveSubArray}. Esse algortimo é baseado no famoso algoritmo de Kadane.
 
-A ideia em seu cerne no fato de que, se temos uma soma acumulada negativa, podemos iniciar uma nova contagem no elemento corrente. Ou seja, começando no primeiro termo, vamos montando subarrays usando a ideia principal descrita anteriormente. Chamando recursivamente para o próximo elemento, calculamos o maior subarray terminando no próximo elemento. Avaliamos o retorno com o calculado e se retorna o maior.
+A ideia se baseia no fato de que, se temos uma soma acumulada negativa, podemos iniciar uma nova contagem no elemento corrente. Ou seja, começando no primeiro termo, vamos montando subarrays usando a ideia principal descrita anteriormente. Chamando recursivamente para o próximo elemento, calculamos o maior subarray terminando no próximo elemento. Avaliamos o retorno com o calculado e se retorna o maior.
 
 Para a análise de complexidade, podemos descrever o algoritmo como a seguinte recorrência:
 
@@ -314,6 +314,28 @@ $T(n) = T(n) = T(n-1) + \theta(1) =  \theta(n) + \theta(1) = \theta(n)$
 
 Assim, temos que a solução exata da recorrência é $\theta(n)$. Portanto, o algoritmo tem complexidade linear.
 
+
+\section{Comparação entre os Algoritmos}
+
+Ao implementar-mos o algoritmo na linguagem Python, veficamos a eficiência dos três algoritmos para diferentes tamanhos e conteúdos de entradas. As entradas são geradas pseudo-aleatoriamente com a função $random.seed()$ e selecionam-se $n$ números, tal que $n(i) \in [-1000,1000]$. O tempo de duração do algoritmo é medido utilizando a função $time.process_time()$ que contabiliza apenas o tempo total de CPU que o processo recebeu.
+
+Os tempos, notação $t(a)$ (tempo do algoritmo a), em relação aos tamanhos de entrada estão expostos na tabela a seguir:
+
+\begin{center}
+\begin{tabular}
+Tamanho   & Resultados \\
+\hline
+5         & t(FB) \approx t(Lin) < t(DeC) \\
+10        & t(Lin) \approx t(FB) < t(DeC) \\
+15        & t(Lin) < t(FB) < t(DeC) \\
+50        & t(Lin) < t(FB) < t(DeC) \\
+57        & t(Lin) < t(FB) \approx t(DeC) \\
+65        & t(Lin) < t(DeC) < t(FB) \\
+\end{tabular}
+\end{center}
+Tabela 1: Mostra os resultados obtidos com os algoritmos. FB: Algoritmo Força Bruta; DeC: Divisão e Conquista; Lin: Algoritmo Linear.
+
+Como podemos verificar, com $n$ suficientemente pequeno (ie. menor que 10), os algoritmos de Força Bruta e Linear se comportam de forma parecida, variando pouco, conforme o conteúdo da entrada. O algoritmo Linear desponta como mais rápido para $n >= 15$. Já o Divisão e Conquista, para $n$ pequeno (ie. menor que 65), é pior que o Força Bruta. Com $n > 65$ os resultados apontam o Força Bruta como pior caso.
 
 
 
